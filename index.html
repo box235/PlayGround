@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0712" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>Emberwitch — Hollow Grove</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230d0917'/%3E%3Cpath d='M9 20h14l-5-4V7l-4 9z' fill='%23a273ff'/%3E%3Ccircle cx='16' cy='22' r='2' fill='%23ffb26b'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+<div id="app">
+  <canvas id="game" aria-label="Emberwitch game arena"></canvas>
+  <div id="vignette" aria-hidden="true"></div>
+
+  <!-- ── In-run HUD ───────────────────────────────────────────── -->
+  <div id="hud" class="hidden">
+    <div class="hud-top">
+      <div class="witch-plate">
+        <div class="portrait" id="portrait">
+          <svg viewBox="0 0 40 40" aria-hidden="true">
+            <path d="M11 24.5h18l-5.2-3.6-1.4-9.4-4.6 7.6-4.6-4.4 1 6.2z" fill="#b18cff"/>
+            <path d="M11 24.5h18l-2.4 2.2H13.2z" fill="#7a55cf"/>
+            <circle cx="17" cy="28" r="1.15" fill="#ffcf8a"/>
+            <circle cx="23" cy="28" r="1.15" fill="#ffcf8a"/>
+          </svg>
+          <span class="lvl" id="lvlBadge">1</span>
+        </div>
+        <div class="bars">
+          <div class="bar hp"><i id="hpFill"></i><b id="hpText">120 / 120</b></div>
+          <div class="bar xp"><i id="xpFill"></i></div>
+        </div>
+      </div>
+      <div class="kill-plate">
+        <span class="kills" id="killCount">0</span>
+        <span class="kill-label">SLAIN</span>
+        <button class="icon-btn" id="muteBtn" aria-label="Toggle sound">
+          <svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="wave" d="M16 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <button class="icon-btn" id="pauseBtn" aria-label="Pause">
+          <svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="clock-row">
+      <div class="run-clock">
+        <div class="clock-label">NIGHTFALL</div>
+        <div class="clock-time" id="clock">00:00</div>
+        <div class="clock-goal" id="objective">Survive the grove</div>
+      </div>
+    </div>
+
+    <div id="bossWrap" class="hidden">
+      <div class="boss-name"><span id="bossTitle">THE BRIAR WARDEN</span><em id="bossHpText"></em></div>
+      <div class="boss-bar"><i id="bossFill"></i></div>
+    </div>
+
+    <div class="spell-rail" id="spellRail"></div>
+    <div class="wave-banner" id="waveBanner"></div>
+
+    <button id="dashBtn" class="dash-btn" aria-label="Dash">
+      <svg viewBox="0 0 24 24"><path d="M13 3 5 14h5l-1 7 8-11h-5z" fill="currentColor"/></svg>
+      <span class="dash-txt">DASH</span>
+      <span class="dash-cd" id="dashCd"></span>
+    </button>
+
+    <div class="hint-line" id="hintLine">Left thumb moves · Right thumb aims · Dash to slip away</div>
+  </div>
+
+  <!-- ── Title screen ─────────────────────────────────────────── -->
+  <div id="titleScreen" class="overlay title-screen">
+    <div class="title-bg"></div>
+    <div class="embers" aria-hidden="true">
+      <i style="--x:12%;--d:9s;--s:.55;--dl:-2s"></i><i style="--x:24%;--d:12s;--s:.8;--dl:-6s"></i>
+      <i style="--x:38%;--d:7s;--s:.4;--dl:-3s"></i><i style="--x:51%;--d:11s;--s:.7;--dl:-8s"></i>
+      <i style="--x:63%;--d:8s;--s:.5;--dl:-1s"></i><i style="--x:76%;--d:13s;--s:.9;--dl:-5s"></i>
+      <i style="--x:88%;--d:10s;--s:.6;--dl:-7s"></i>
+    </div>
+    <div class="title-content">
+      <div class="rune-mark">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="32" r="23" fill="none" stroke="currentColor" stroke-width="1" opacity=".45"/>
+          <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" stroke-width=".6" opacity=".25" stroke-dasharray="2 5"/>
+          <path d="M32 10 41 30 32 54 23 30z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M15 27h34M20 41h24" stroke="currentColor" stroke-width=".8" opacity=".6"/>
+          <circle cx="32" cy="32" r="4.5" fill="none" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <h1 class="game-title">EMBER<span>WITCH</span></h1>
+      <p class="game-sub">Hollow Grove</p>
+      <p class="game-pitch">The moon is drowning in briar. Hunt the beasts of the grove,<br class="wide-only" /> gather their sparks, and learn the spells that will unmake the Hollow King.</p>
+      <button id="startBtn" class="primary-btn">
+        <span>Begin the Hunt</span>
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+      </button>
+      <div class="control-cards">
+        <div class="ctrl"><span class="ctrl-ico">✦</span><b>Move</b><em>Left thumb</em></div>
+        <div class="ctrl"><span class="ctrl-ico">✧</span><b>Aim &amp; Cast</b><em>Right thumb</em></div>
+        <div class="ctrl"><span class="ctrl-ico">⚡</span><b>Dash</b><em>Center rune</em></div>
+      </div>
+      <p class="footnote">Keyboard: WASD move · mouse aim · Space dash · Esc pause</p>
+    </div>
+  </div>
+
+  <!-- ── Level up ─────────────────────────────────────────────── -->
+  <div id="levelup" class="overlay levelup-overlay hidden">
+    <div class="levelup-inner">
+      <div class="levelup-head">
+        <div class="lv-ornament">✦</div>
+        <h2>Level <span id="newLevel">2</span></h2>
+        <p>Choose a thread of power</p>
+      </div>
+      <div class="cards" id="cards"></div>
+      <p class="card-hint">Tap a card · keys 1 / 2 / 3</p>
+    </div>
+  </div>
+
+  <!-- ── Pause ───────────────────────────────────────────────── -->
+  <div id="pauseScreen" class="overlay pause-screen hidden">
+    <div class="pause-inner">
+      <div class="rune-mark small">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="23" fill="none" stroke="currentColor" stroke-width="1" opacity=".45"/><path d="M32 10 41 30 32 54 23 30z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+      </div>
+      <h2>Paused</h2>
+      <div class="pause-stats" id="pauseStats"></div>
+      <div class="pause-buttons">
+        <button id="resumeBtn" class="primary-btn small-btn">Return to the Grove</button>
+        <button id="quitBtn" class="ghost-btn">Abandon Run</button>
+      </div>
+      <div class="loadout" id="loadout"></div>
+    </div>
+  </div>
+
+  <!-- ── Game over / victory ─────────────────────────────────── -->
+  <div id="endScreen" class="overlay end-screen hidden">
+    <div class="end-inner">
+      <div class="end-sigil" id="endSigil">✦</div>
+      <h2 id="endTitle">The Grove Claims You</h2>
+      <p id="endLine">Your embers gutter out beneath the black boughs.</p>
+      <div class="end-stats" id="endStats"></div>
+      <div class="end-spells" id="endSpells"></div>
+      <button id="retryBtn" class="primary-btn">Rise Again</button>
+      <p class="best-line" id="bestLine"></p>
+    </div>
+  </div>
+</div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
