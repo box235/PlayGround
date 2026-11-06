@@ -1,4 +1,15 @@
-# PlayGround
+# Skybound — The Obby Run
+
+A colorful, side-scrolling obstacle-course game built with vanilla HTML, CSS, and Canvas. Leap across increasingly tricky stages, scoop up coins, reach checkpoints, and spend your earnings on boosts.
+
+## Play
+
+Open `index.html` in a browser or serve this folder with any static web server. Use **A/D** or **←/→** to move, **Space/↑** to jump, and **B** to open the boost shop. Touch controls appear on smaller screens. Progress, coins, and upgrades are saved in your browser.
+
+- 8 escalating stages with hazards, moving platforms, coins, and checkpoints
+- Earn coins from collectibles and stage clears
+- Buy super springs, coin magnets, safety bubbles, and a permanent double jump
+
 
 <!-- omgithub:readme:start -->
 ## 🚀 Build, play, and remix with OMGithub

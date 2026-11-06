@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#101321" />
+  <title>SKYBOUND — The Obby Run</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="game-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Skybound home"><span class="brand-mark">✦</span><span>SKY<span class="brand-light">BOUND</span></span></a>
+      <div class="top-stats">
+        <div class="stat-chip stage-chip"><span class="chip-icon">◈</span><span><small>STAGE</small><b id="stageStat">01 <i>/ 08</i></b></span></div>
+        <div class="stat-chip coin-chip"><span class="coin-icon">●</span><span><small>YOUR COINS</small><b id="coinStat">000</b></span><span class="coin-plus">+</span></div>
+        <button class="shop-button" id="shopOpen"><span>▣</span> BOOST SHOP <kbd>B</kbd></button>
+      </div>
+    </header>
+
+    <section class="game-frame" aria-label="Skybound obstacle course">
+      <canvas id="game" aria-label="A side-scrolling obstacle course game"></canvas>
+      <div class="hud-left"><div class="level-kicker"><span class="live-dot"></span><span id="zoneName">SUNRISE STARTER</span></div><div class="level-title" id="levelTitle">Easy does it<span>Take your first leap.</span></div></div>
+      <div class="hud-right"><div class="progress-label"><span>COURSE PROGRESS</span><b id="progressText">0%</b></div><div class="progress-track"><i id="progressBar"></i></div><div class="boosts" id="boostStatus"></div></div>
+      <div class="toast" id="toast" role="status"></div>
+      <div class="center-message" id="centerMessage" aria-live="polite"></div>
+      <div class="mobile-controls" aria-label="Touch controls">
+        <div class="move-controls"><button data-control="left" aria-label="Move left">←</button><button data-control="right" aria-label="Move right">→</button></div>
+        <button class="jump-control" data-control="jump" aria-label="Jump">JUMP <span>↑</span></button>
+      </div>
+      <div class="sound-badge">✦ &nbsp; NO CHECKPOINT LEFT BEHIND</div>
+    </section>
+
+    <footer class="bottom-bar">
+      <div class="controls-copy"><span class="keycap">A</span><span class="keycap">D</span><span class="keycap">←</span><span class="keycap">→</span><span>MOVE</span><span class="keycap space">SPACE</span><span>JUMP</span><span class="keycap">B</span><span>SHOP</span></div>
+      <div class="tip-copy"><span>✧</span> <b>TIP</b> <span id="tipText">Collect every coin — they add up fast.</span></div>
+      <button class="restart-button" id="restartButton" title="Restart this stage">↺ <span>RESTART</span></button>
+    </footer>
+  </main>
+
+  <div class="modal-backdrop" id="shopModal" aria-hidden="true">
+    <section class="shop-panel" role="dialog" aria-modal="true" aria-labelledby="shopTitle">
+      <button class="close-button" id="shopClose" aria-label="Close shop">×</button>
+      <div class="shop-eyebrow">THE PIT STOP <span>✦</span></div>
+      <h2 id="shopTitle">A little <em>extra</em> lift.</h2>
+      <p class="shop-intro">Stock up before your next big leap. Boosts stay with you until you use them.</p>
+      <div class="wallet-row"><span>YOUR WALLET</span><b><i>●</i> <span id="shopCoins">0</span> COINS</b></div>
+      <div class="shop-items" id="shopItems"></div>
+      <div class="shop-foot"><span>Earn coins by finding them in the course<br>or clearing a stage.</span><span class="shop-key">ESC TO CLOSE</span></div>
+    </section>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
